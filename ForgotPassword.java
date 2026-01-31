@@ -36,7 +36,7 @@ public class ForgotPasswordForm extends javax.swing.JFrame {
         btnReset.setText("Reset Password");
         btnReset.addActionListener(this::btnResetActionPerformed);
 
-        btnBack.setText("Back To Login");
+        btnBack.setText("Cancel");
         btnBack.addActionListener(this::btnBackActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -65,7 +65,7 @@ public class ForgotPasswordForm extends javax.swing.JFrame {
                         .addComponent(btnBack)
                         .addGap(32, 32, 32)
                         .addComponent(btnReset)))
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
