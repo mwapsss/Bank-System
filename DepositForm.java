@@ -2,21 +2,26 @@ import javax.swing.*;
 import java.io.*;
 
 public class DepositForm extends javax.swing.JFrame {
-     String username;
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DepositForm.class.getName());
 
+    // Stores the currently logged-in username
+    String username;
+
+    // Logger for error logging
+    private static final java.util.logging.Logger logger =
+            java.util.logging.Logger.getLogger(DepositForm.class.getName());
+
+    // Constructor receives username from Dashboard
     public DepositForm(String username) {
-        this.username = username;
-        initComponents();
-        setLocationRelativeTo(null);
+        this.username = username; // assign logged-in user
+        initComponents();         // initialize GUI
+        setLocationRelativeTo(null); // center the form
     }
 
-
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // Auto-generated Swing GUI code
     private void initComponents() {
 
+        // GUI components
         lblTitle = new javax.swing.JLabel();
         lblAmount = new javax.swing.JLabel();
         txtAmount = new javax.swing.JTextField();
@@ -25,18 +30,24 @@ public class DepositForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        // Title label
         lblTitle.setText("DEPOSIT");
 
+        // Amount label
         lblAmount.setText("Amount");
 
+        // Deposit button action
         btnDeposit.setText("Deposit");
         btnDeposit.addActionListener(this::btnDepositActionPerformed);
 
+        // Cancel button action
         btnCancel.setText("Cancel");
         btnCancel.addActionListener(this::btnCancelActionPerformed);
 
+        // Layout settings (auto-generated)
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
+
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -55,6 +66,7 @@ public class DepositForm extends javax.swing.JFrame {
                             .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(192, Short.MAX_VALUE))
         );
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -63,7 +75,9 @@ public class DepositForm extends javax.swing.JFrame {
                 .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblAmount)
-                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                  javax.swing.GroupLayout.DEFAULT_SIZE,
+                                  javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDeposit)
@@ -71,75 +85,102 @@ public class DepositForm extends javax.swing.JFrame {
                 .addGap(158, 158, 158))
         );
 
-        pack();
-    }// </editor-fold>                        
+        pack(); // Adjust window size
+    }
 
-    private void btnDepositActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    // Deposit button logic
+    private void btnDepositActionPerformed(java.awt.event.ActionEvent evt) {
+
+        // Convert input text to double
         double amount = Double.parseDouble(txtAmount.getText());
+
+        // Update user's balance
         updateBalance(amount);
+
+        // Save transaction record
         saveTransaction("Deposit", amount, "Cash deposit");
+
+        // Success message
         JOptionPane.showMessageDialog(this, "Deposit successful");
+
+        // Close the form
         dispose();
     }
 
+    // Updates balance in users.txt file
     private void updateBalance(double amt) {
-        File input = new File("users.txt");
-        File temp = new File("temp.txt");
+
+        File input = new File("users.txt"); // original file
+        File temp = new File("temp.txt");   // temporary file
 
         try (BufferedReader br = new BufferedReader(new FileReader(input));
              FileWriter fw = new FileWriter(temp)) {
 
             String line;
+
+            // Read each user record
             while ((line = br.readLine()) != null) {
                 String[] d = line.split(",");
+
+                // If username matches, update balance
                 if (d[0].equals(username)) {
                     double newBal = Double.parseDouble(d[3]) + amt;
                     fw.write(d[0] + "," + d[1] + "," + d[2] + "," + newBal + "\n");
-                } else fw.write(line + "\n");
+                } else {
+                    // Write unchanged user data
+                    fw.write(line + "\n");
+                }
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        // Replace old file with updated file
         input.delete();
         temp.renameTo(input);
     }
-     private void saveTransaction(String type, double amt, String details) {
-    try (FileWriter fw = new FileWriter("transactions.txt", true)) {
-      
-        String date = java.time.LocalDateTime.now().toString();
-  
-        fw.write(username + "," + date + "," + type + "," + amt + "," + details + "\n");
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    }                                          
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {                                          
-       dispose();
-    }                                         
+    // Saves transaction history in transactions.txt
+    private void saveTransaction(String type, double amt, String details) {
+        try (FileWriter fw = new FileWriter("transactions.txt", true)) {
+
+            // Get current date and time
+            String date = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            // Write transaction in CSV format
+            fw.write(username + "," + date + "," + type + "," +
+                     String.format("%.2f", amt) + "," + details + "\n");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Cancel button closes the form
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {
+        dispose();
+    }
 
     public static void main(String args[]) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        // Look and Feel setup (optional)
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (javax.swing.UIManager.LookAndFeelInfo info :
+                    javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
     }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDeposit;
     private javax.swing.JLabel lblAmount;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTextField txtAmount;
-    // End of variables declaration                   
 }
