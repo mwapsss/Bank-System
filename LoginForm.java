@@ -3,17 +3,20 @@ import java.io.*;
 
 public class LoginForm extends javax.swing.JFrame {
     
+    // Logger for debugging and error tracking
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginForm.class.getName());
 
+    // Constructor: initializes the form and centers it on the screen
     public LoginForm() {
-         initComponents();
-        setLocationRelativeTo(null);
+         initComponents();       // Initialize Swing components (buttons, labels, textfields)
+        setLocationRelativeTo(null); // Center the frame on the screen
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // This method initializes all the GUI components
     private void initComponents() {
 
+        // Main panel to hold all components
         mainPanel = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         lblUser = new javax.swing.JLabel();
@@ -26,35 +29,44 @@ public class LoginForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        mainPanel.setBackground(new java.awt.Color(249, 253, 255));
+        // Customize main panel
+        mainPanel.setBackground(new java.awt.Color(249, 253, 255)); // Light background
         mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        lblTitle.setFont(new java.awt.Font("SansSerif", 1, 36)); // NOI18N
+        // Title label
+        lblTitle.setFont(new java.awt.Font("SansSerif", 1, 36)); // Large font
         lblTitle.setText("BANK SYSTEM");
 
-        lblUser.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        // Username label
+        lblUser.setFont(new java.awt.Font("Segoe UI Black", 0, 18));
         lblUser.setText("Username");
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        // Password label
+        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 18));
         jLabel1.setText("Password");
 
-        txtUsername.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        // Username text field
+        txtUsername.setFont(new java.awt.Font("Segoe UI Black", 0, 18));
 
-        btnLogin.setBackground(new java.awt.Color(37, 99, 235));
-        btnLogin.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        // Login button
+        btnLogin.setBackground(new java.awt.Color(37, 99, 235)); // Blue color
+        btnLogin.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14));
         btnLogin.setText("Login");
-        btnLogin.addActionListener(this::btnLoginActionPerformed);
+        btnLogin.addActionListener(this::btnLoginActionPerformed); // Call login method when clicked
 
+        // Signup button
         btnSignup.setBackground(new java.awt.Color(37, 99, 235));
-        btnSignup.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        btnSignup.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14));
         btnSignup.setText("Signup");
-        btnSignup.addActionListener(this::btnSignupActionPerformed);
+        btnSignup.addActionListener(this::btnSignupActionPerformed); // Open signup form
 
+        // Forgot password button
         btnForgot.setBackground(new java.awt.Color(37, 99, 235));
-        btnForgot.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        btnForgot.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14));
         btnForgot.setText("Forgot Password");
-        btnForgot.addActionListener(this::btnForgotActionPerformed);
+        btnForgot.addActionListener(this::btnForgotActionPerformed); // Open forgot password form
 
+        // Layout for main panel (drag-and-drop style)
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -73,13 +85,7 @@ public class LoginForm extends javax.swing.JFrame {
                             .addComponent(btnLogin)
                             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(63, 63, 63)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblUser, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(79, 79, 79))
         );
         mainPanelLayout.setVerticalGroup(
@@ -104,6 +110,7 @@ public class LoginForm extends javax.swing.JFrame {
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
+        // Layout for the frame itself
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -115,50 +122,52 @@ public class LoginForm extends javax.swing.JFrame {
             .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
         );
 
-        pack();
-    }// </editor-fold>                        
+        pack(); // Pack all components neatly
+    }
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    // Action performed when login button is clicked
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {
         try (BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
             String line;
             boolean found = false;
 
+            // Loop through users.txt to check credentials
             while ((line = br.readLine()) != null) {
                 String[] d = line.split(",");
                 if (d[0].equals(txtUsername.getText()) &&
                     d[1].equals(new String(txtPassword.getPassword()))) {
 
                     found = true;
-                    new Dashboard(d[0], d[2]).setVisible(true);
-                    dispose();
+                    new Dashboard(d[0], d[2]).setVisible(true); // Open dashboard
+                    dispose(); // Close login form
                     break;
                 }
             }
 
             if (!found)
-                JOptionPane.showMessageDialog(this, "Invalid login!");
+                JOptionPane.showMessageDialog(this, "Invalid login!"); // Show error if user/pass not found
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Print errors
         }
-    }                                        
+    }
 
-    private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {                                          
-         new SignupForm().setVisible(true);
+    // Action performed when signup button is clicked
+    private void btnSignupActionPerformed(java.awt.event.ActionEvent evt) {
+         new SignupForm().setVisible(true); // Open signup form
         dispose();
-    }                                         
+    }
 
-    private void btnForgotActionPerformed(java.awt.event.ActionEvent evt) {                                          
-       new ForgotPasswordForm().setVisible(true);
+    // Action performed when forgot password button is clicked
+    private void btnForgotActionPerformed(java.awt.event.ActionEvent evt) {
+       new ForgotPasswordForm().setVisible(true); // Open forgot password form
         dispose();
-    }                                         
+    }
 
+    // Main method: entry point of the program
     public static void main(String args[]) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
+            // Set Nimbus look and feel (optional)
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -168,19 +177,19 @@ public class LoginForm extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+
+        // Show the login form
         java.awt.EventQueue.invokeLater(() -> new LoginForm().setVisible(true));
     }
 
-    // Variables declaration - do not modify                     
-    private javax.swing.JButton btnForgot;
-    private javax.swing.JButton btnLogin;
-    private javax.swing.JButton btnSignup;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel lblTitle;
-    private javax.swing.JLabel lblUser;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JTextField txtUsername;
-    // End of variables declaration                   
+    // Variables declaration
+    private javax.swing.JButton btnForgot;       // Forgot password button
+    private javax.swing.JButton btnLogin;        // Login button
+    private javax.swing.JButton btnSignup;       // Signup button
+    private javax.swing.JLabel jLabel1;          // Password label
+    private javax.swing.JLabel lblTitle;         // Main title label
+    private javax.swing.JLabel lblUser;          // Username label
+    private javax.swing.JPanel mainPanel;        // Main panel
+    private javax.swing.JPasswordField txtPassword; // Password field
+    private javax.swing.JTextField txtUsername;     // Username field
 }
